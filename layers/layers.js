@@ -1,8 +1,25 @@
+ol.proj.proj4.register(proj4);
 var wms_layers = [];
 
+// --- ORTOFOTO COG ---
+var lyr_Ortofoto = new ol.layer.WebGLTile({
+    source: new ol.source.GeoTIFF({
+        sources: [{
+            url: './rasters/Ortofoto_COG4.tif',
+            nodata: 0
+        }],
+        normalize: true,
+        convertToRGB: true
+    }),
+    title: 'Ortofoto',
+    opacity: 1
+});
+lyr_Ortofoto.setVisible(true);
+
+// --- CURVAS DE NIVEL ---
 var format_Contours_0 = new ol.format.GeoJSON();
 var features_Contours_0 = format_Contours_0.readFeatures(json_Contours_0, 
-            {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'});
+            {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:5347'});
 var jsonSource_Contours_0 = new ol.source.Vector({
     attributions: ' ',
 });
@@ -15,24 +32,11 @@ var lyr_Contours_0 = new ol.layer.Vector({
                 interactive: true,
                 title: '<img src="styles/legend/Contours_0.png" /> Contours'
             });
+lyr_Contours_0.setVisible(true);
 
-var lyr_ortofoto = new ol.layer.WebGLTile({
-    'title': 'Ortofoto',
-    'opacity': 1.000000,
-    source: new ol.source.GeoTIFF({
-        convertToRGB: true,
-        normalize: false, // Evita que OpenLayers altere los valores de color del JPEG interno
-        sources: [
-            {
-                url: './rasters/Ortofoto_COG4.tif',
-                projection: 'EPSG:3857' // Fuerza a que coincida con la proyección del mapa (featureProjection)
-            }
-        ]
-    })
-});
+// Ortofoto primero (abajo), curvas encima
+var layersList = [lyr_Ortofoto, lyr_Contours_0];
 
-lyr_Contours_0.setVisible(true); lyr_ortofoto.setVisible(true);
-var layersList = [lyr_Contours_0, lyr_ortofoto];
 lyr_Contours_0.set('fieldAliases', {'fid': 'fid', 'ID': 'ID', 'ELEV': 'ELEV', });
 lyr_Contours_0.set('fieldImages', {'fid': '', 'ID': '', 'ELEV': '', });
 lyr_Contours_0.set('fieldLabels', {'fid': 'no label', 'ID': 'no label', 'ELEV': 'no label', });
