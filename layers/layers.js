@@ -5,11 +5,10 @@ var wms_layers = [];
 var lyr_Ortofoto = new ol.layer.WebGLTile({
     source: new ol.source.GeoTIFF({
         sources: [{
-            url: './rasters/Ortofoto_COG4.tif',
-            nodata: 0
+            url: './rasters/Ortofotowebp.tif'
         }],
         normalize: true,
-        convertToRGB: true
+        convertToRGB: false
     }),
     title: 'Ortofoto',
     opacity: 1
